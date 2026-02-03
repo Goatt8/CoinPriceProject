@@ -45,9 +45,10 @@ class CoinViewModel {
                 market: raw.market,
                 koreanName: testMarketDict[raw.market] ?? "Unknown",
                 symbol: symbol,
-                price: formatNumber(raw.tradePrice),
+                price: raw.tradePrice.formattedThousandNumComma,
                 changeRate: String(format: "%.2f%%", raw.changeRate * 100),
                 changeStatus: raw.change,
+                changedPrice: raw.signedChangePrice.formattedThousandNumComma,
                 volume: raw.accTradePrice24h,
                 logoURL: URL(string: "https://static.upbit.com/logos/\(symbol).png")
             )
@@ -57,11 +58,5 @@ class CoinViewModel {
             self.coinList = converted
             self.onUpdated?()
         }
-    }
-    
-    private func formatNumber(_ number: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter.string(from: NSNumber(value: number)) ?? "0"
     }
 }

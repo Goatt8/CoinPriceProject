@@ -11,13 +11,25 @@ class CoinListTableViewCell: UITableViewCell {
     
     static let identifier = "CoinListTableViewCell"
     
+    //Image
+    private let symbolImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "person.circle.fill")
+        imageView.tintColor = .systemGray4
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.backgroundColor = .systemGray6
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     //title
     let titleVerticalStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.distribution = .fill
-        stackView.alignment = .center
+        stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -25,7 +37,8 @@ class CoinListTableViewCell: UITableViewCell {
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "nameLabel"
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.textAlignment = .left
+        label.font = UIFont.systemFont(ofSize: 16, weight: .heavy)
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -34,7 +47,8 @@ class CoinListTableViewCell: UITableViewCell {
     let symbolLabel: UILabel = {
         let label = UILabel()
         label.text = "symbolLabel"
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.textColor = .systemGray2
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -46,7 +60,7 @@ class CoinListTableViewCell: UITableViewCell {
         stackView.axis = .vertical
         stackView.spacing = 10
         stackView.distribution = .fill
-        stackView.alignment = .center
+        stackView.alignment = .trailing
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -54,8 +68,8 @@ class CoinListTableViewCell: UITableViewCell {
     let currentPriceLabel: UILabel = {
         let label = UILabel()
         label.text = "currentPriceLabel"
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        label.textAlignment = .left
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -73,27 +87,27 @@ class CoinListTableViewCell: UITableViewCell {
     let changeRateLabel: UILabel = {
         let label = UILabel()
         label.text = "changeRateLabel"
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        label.textAlignment = .left
+        label.font = UIFont.systemFont(ofSize: 14, weight: .heavy)
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     let changePriceLabel: UILabel = {
         let label = UILabel()
-        label.text = "changeRateLabel"
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        label.textAlignment = .left
+        label.text = "changePriceLabel"
+        label.font = UIFont.systemFont(ofSize: 14, weight: .light)
+        label.textColor = .systemGray
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    //tradePrice
     let tradePrice24h: UILabel = {
         let label = UILabel()
-        label.text = "tradePrice24h"
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        label.textAlignment = .left
+        label.text = "24HtradePrice"
+        label.font = UIFont.systemFont(ofSize: 12, weight: .light)
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -110,24 +124,27 @@ class CoinListTableViewCell: UITableViewCell {
     
     func configure(with coin: CoinModel) {
         nameLabel.text = coin.koreanName
+        symbolLabel.text = coin.symbol
         currentPriceLabel.text = coin.price
         changeRateLabel.text = coin.changeRate
+        changePriceLabel.text = coin.changedPrice
+        tradePrice24h.text = coin.volume.formattedMillionNum
         
-        // 상태에 따른 색상 변경 로직
         switch coin.changeStatus {
         case "RISE": // 상승
-            currentPriceLabel.textColor = .systemRed
+            changePriceLabel.textColor = .systemRed
             changeRateLabel.textColor = .systemRed
         case "FALL": // 하락
-            currentPriceLabel.textColor = .systemBlue
+            changePriceLabel.textColor = .systemBlue
             changeRateLabel.textColor = .systemBlue
         default:     // 보합
-            currentPriceLabel.textColor = .label
+            changePriceLabel.textColor = .label
             changeRateLabel.textColor = .label
         }
     }
     
     private func configureUI() {
+        self.contentView.addSubview(symbolImageView)
         self.contentView.addSubview(titleVerticalStackView)
         self.contentView.addSubview(priceVerticalStackView)
         self.contentView.addSubview(tradePrice24h)
@@ -141,19 +158,24 @@ class CoinListTableViewCell: UITableViewCell {
         self.horizontalStackView.addArrangedSubview(changePriceLabel)
         
         NSLayoutConstraint.activate([
-            //            titleVerticalStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            
+            symbolImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            symbolImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            
             titleVerticalStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            titleVerticalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            titleVerticalStackView.leadingAnchor.constraint(equalTo: symbolImageView.trailingAnchor, constant: 14),
             
             priceVerticalStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            priceVerticalStackView.leadingAnchor.constraint(equalTo: titleVerticalStackView.trailingAnchor, constant: 16),
+            priceVerticalStackView.leadingAnchor.constraint(greaterThanOrEqualTo: titleVerticalStackView.leadingAnchor, constant: 16),
+            priceVerticalStackView.trailingAnchor.constraint(equalTo: tradePrice24h.leadingAnchor, constant: -20),
             
             tradePrice24h.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            tradePrice24h.leadingAnchor.constraint(equalTo: priceVerticalStackView.trailingAnchor, constant: 16)
+            tradePrice24h.leadingAnchor.constraint(greaterThanOrEqualTo: priceVerticalStackView.trailingAnchor, constant: 10),
+            tradePrice24h.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            tradePrice24h.widthAnchor.constraint(equalToConstant: 80),
             
-            
-            //            imageView.widthAnchor.constraint(equalToConstant: 24),
-            //            imageView.heightAnchor.constraint(equalToConstant: 24)
+            symbolImageView.widthAnchor.constraint(equalToConstant: 40),
+            symbolImageView.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
     

@@ -14,6 +14,7 @@ struct CoinModel {
     let price: String
     let changeRate: String
     let changeStatus: String
+    let changedPrice: String
     let volume: Double
     let logoURL: URL?
 }

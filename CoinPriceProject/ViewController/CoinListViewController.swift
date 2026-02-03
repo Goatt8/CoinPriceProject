@@ -29,6 +29,7 @@ class CoinListViewController: UIViewController {
     
     private func setTableView() {
         self.tableView.register(CoinListTableViewCell.self, forCellReuseIdentifier: CoinListTableViewCell.identifier)
+        self.tableView.rowHeight = 64
         self.tableView.dataSource = self
         self.tableView.delegate = self
     }
@@ -43,7 +44,7 @@ class CoinListViewController: UIViewController {
     }
     
     private func setNavigationController() {
-        navigationItem.title = "그룹 목록"
+        navigationItem.title = "코인 목록"
         let rightButton = UIBarButtonItem(image: UIImage(named: "icon_search"), style: .plain, target: self, action: #selector(seachButtonTapped))
         navigationItem.rightBarButtonItem = rightButton
     }
@@ -53,7 +54,7 @@ class CoinListViewController: UIViewController {
     }
     
     private func configureUI() {
-        self.view.backgroundColor = .yellow
+        self.view.backgroundColor = .white
         
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([
