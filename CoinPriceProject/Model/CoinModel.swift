@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CoinDisplayModel {
+struct CoinModel {
     let market: String      // KRW-BTC
     let koreanName: String  // 비트코인
     let symbol: String      // BTC

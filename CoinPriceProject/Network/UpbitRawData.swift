@@ -18,7 +18,7 @@ struct UpbitRawData: Decodable {
         case market
         case tradePrice = "trade_price"
         case change
-        case changeRate = "change_rate"
+        case changeRate = "signed_change_rate"
         case accTradePrice24h = "acc_trade_price_24h"
     }
 }

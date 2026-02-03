@@ -8,7 +8,9 @@
 import UIKit
 
 class CoinListViewController: UIViewController {
-
+    
+    private let coinViewModel = CoinViewModel()
+    
     private var tableView : UITableView = {
         let tableView = UITableView()
         tableView.rowHeight = UITableView.automaticDimension
@@ -19,8 +21,25 @@ class CoinListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setNavigationController()
+        configureUI()
+        setTableView()
+        updateCoins()
+    }
+    
+    private func setTableView() {
+        self.tableView.register(CoinListTableViewCell.self, forCellReuseIdentifier: CoinListTableViewCell.identifier)
         self.tableView.dataSource = self
         self.tableView.delegate = self
+    }
+    
+    private func updateCoins() {
+        coinViewModel.onUpdated = { [weak self] in
+                print("화면 변환 알림 = combine")
+                self?.tableView.reloadData()
+            }
+            
+        coinViewModel.fetchCoins()
     }
     
     private func setNavigationController() {
@@ -34,6 +53,8 @@ class CoinListViewController: UIViewController {
     }
     
     private func configureUI() {
+        self.view.backgroundColor = .yellow
+        
         self.view.addSubview(tableView)
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
@@ -42,16 +63,20 @@ class CoinListViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
-    
 }
 
 extension CoinListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return coinViewModel.coinList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+        let cell = tableView.dequeueReusableCell(withIdentifier: CoinListTableViewCell.identifier, for: indexPath) as! CoinListTableViewCell
+        
+        let coin = coinViewModel.coinList[indexPath.row]
+        
+        cell.configure(with: coin)
+        
+        return cell
     }
 }
-
