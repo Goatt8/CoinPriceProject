@@ -11,6 +11,8 @@ class CoinListViewController: UIViewController {
     
     private let coinViewModel = CoinViewModel()
     
+    private let searchController = UISearchController(searchResultsController: nil)
+    
     private var tableView : UITableView = {
         let tableView = UITableView()
         tableView.rowHeight = UITableView.automaticDimension
@@ -36,21 +38,33 @@ class CoinListViewController: UIViewController {
     
     private func updateCoins() {
         coinViewModel.onUpdated = { [weak self] in
-                print("화면 변환 알림 = combine")
-                self?.tableView.reloadData()
-            }
-            
+            print("화면 변환 알림 = combine")
+            self?.tableView.reloadData()
+        }
+        
         coinViewModel.fetchTickerData()
     }
     
     private func setNavigationController() {
         navigationItem.title = "코인 목록"
-        let rightButton = UIBarButtonItem(image: UIImage(named: "icon_search"), style: .plain, target: self, action: #selector(seachButtonTapped))
+        let rightButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(seachButtonTapped))
         navigationItem.rightBarButtonItem = rightButton
+        
+        navigationItem.searchController = nil
+    }
+    
+    private func setupSearchController() {
+        searchController.searchBar.placeholder = "코인명 또는 심볼 검색"
+        searchController.hidesNavigationBarDuringPresentation = true
+        searchController.obscuresBackgroundDuringPresentation = false
     }
     
     @objc private func seachButtonTapped() {
-        
+        navigationItem.searchController = self.searchController
+        DispatchQueue.main.async {
+            self.searchController.isActive = true
+            self.searchController.searchBar.becomeFirstResponder()
+        }
     }
     
     private func configureUI() {
