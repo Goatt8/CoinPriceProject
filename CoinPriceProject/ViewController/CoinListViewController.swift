@@ -6,10 +6,13 @@
 //
 
 import UIKit
+import Combine
 
 class CoinListViewController: UIViewController {
     
     private let coinViewModel = CoinViewModel()
+    
+    private var cancellables = Set<AnyCancellable>()
     
     private let searchController = UISearchController(searchResultsController: nil)
     
@@ -26,6 +29,7 @@ class CoinListViewController: UIViewController {
         setNavigationController()
         configureUI()
         setTableView()
+        setupSearchController()
         updateCoins()
     }
     
@@ -37,12 +41,17 @@ class CoinListViewController: UIViewController {
     }
     
     private func updateCoins() {
-        coinViewModel.onUpdated = { [weak self] in
-            print("화면 변환 알림 = combine")
-            self?.tableView.reloadData()
-        }
-        
+        bindViewModel()
         coinViewModel.fetchTickerData()
+    }
+    
+    private func bindViewModel() {
+        coinViewModel.$filteredCoins
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
     }
     
     private func setNavigationController() {
@@ -56,10 +65,11 @@ class CoinListViewController: UIViewController {
     private func setupSearchController() {
         searchController.hidesNavigationBarDuringPresentation = true
         searchController.obscuresBackgroundDuringPresentation = false
+        
+        searchController.searchResultsUpdater = self
     }
     
     @objc private func seachButtonTapped() {
-        
         navigationItem.searchController = self.searchController
         DispatchQueue.main.async {
             self.searchController.isActive = true
@@ -82,16 +92,22 @@ class CoinListViewController: UIViewController {
 
 extension CoinListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return coinViewModel.coinList.count
+        return coinViewModel.filteredCoins.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CoinListTableViewCell.identifier, for: indexPath) as! CoinListTableViewCell
-        
-        let coin = coinViewModel.coinList[indexPath.row]
-        
+        let coin = coinViewModel.filteredCoins[indexPath.row]
         cell.bind(with: coin)
         
         return cell
+    }
+}
+
+extension CoinListViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard let text = searchController.searchBar.text else { return }
+
+        coinViewModel.searchText = text
     }
 }

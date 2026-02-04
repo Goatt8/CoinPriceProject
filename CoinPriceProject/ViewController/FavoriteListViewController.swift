@@ -24,7 +24,7 @@ class FavoriteListViewController: UIViewController {
         setNavigationController()
         configureUI()
         setTableView()
-        updateCoins()
+//        updateCoins()
     }
     
     private func setTableView() {
@@ -34,14 +34,14 @@ class FavoriteListViewController: UIViewController {
         self.tableView.delegate = self
     }
     
-    private func updateCoins() {
-        coinViewModel.onUpdated = { [weak self] in
-                print("화면 변환 알림 = combine")
-                self?.tableView.reloadData()
-            }
-            
-        coinViewModel.fetchTickerData()
-    }
+//    private func updateCoins() {
+//        coinViewModel.onUpdated = { [weak self] in
+//                print("화면 변환 알림 = combine")
+//                self?.tableView.reloadData()
+//            }
+//            
+//        coinViewModel.fetchTickerData()
+//    }
     
     private func setNavigationController() {
         navigationItem.title = "코인 목록"

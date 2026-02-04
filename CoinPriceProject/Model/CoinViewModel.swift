@@ -6,13 +6,40 @@
 //
 
 import UIKit
+import Combine
 
 class CoinViewModel {
-    var coinList: [CoinModel] = []
+    
+    @Published var searchText: String = ""
+    
+    @Published var filteredCoins: [CoinModel] = []
+    
+    @Published var coinList: [CoinModel] = []
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        setupSearchPipeline()
+    }
     
     private var marketDicts: [String: String] = [:]
     
-    var onUpdated: (() -> Void)?
+    private func setupSearchPipeline() {
+        Publishers.CombineLatest($searchText, $coinList)
+            .debounce(for: .milliseconds(400), scheduler: RunLoop.main)
+            .map { (text, coins) -> [CoinModel] in
+                if text.isEmpty {
+                    return coins
+                } else {
+                    let query = text.lowercased()
+                    return coins.filter {
+                        $0.koreanName.contains(query) ||
+                        $0.symbol.lowercased().contains(query)
+                    }
+                }
+            }
+            .assign(to: &$filteredCoins)
+    }
     
     func fetchTickerData() {
         if marketDicts.isEmpty {
@@ -73,7 +100,6 @@ class CoinViewModel {
         
         DispatchQueue.main.async {
             self.coinList = converted
-            self.onUpdated?()
         }
     }
 }
