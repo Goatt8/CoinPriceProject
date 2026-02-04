@@ -40,7 +40,7 @@ class CoinListViewController: UIViewController {
                 self?.tableView.reloadData()
             }
             
-        coinViewModel.fetchCoins()
+        coinViewModel.fetchTickerData()
     }
     
     private func setNavigationController() {
