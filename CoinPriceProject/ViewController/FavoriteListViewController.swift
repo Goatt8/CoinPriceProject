@@ -1,13 +1,13 @@
 //
-//  ViewController.swift
+//  FavoriteListViewController.swift
 //  CoinPriceProject
 //
-//  Created by goat on 1/30/26.
+//  Created by goat on 2/4/26.
 //
 
 import UIKit
 
-class CoinListViewController: UIViewController {
+class FavoriteListViewController: UIViewController {
     
     private let coinViewModel = CoinViewModel()
     
@@ -66,7 +66,7 @@ class CoinListViewController: UIViewController {
     }
 }
 
-extension CoinListViewController: UITableViewDataSource, UITableViewDelegate {
+extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return coinViewModel.coinList.count
     }

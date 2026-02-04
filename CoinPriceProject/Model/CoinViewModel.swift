@@ -14,13 +14,6 @@ class CoinViewModel {
     
     var onUpdated: (() -> Void)?
     
-    private let testMarketDict = [
-        "KRW-BTC": "비트코인",
-        "KRW-ETH": "이더리움",
-        "KRW-XRP": "리플",
-        "KRW-SOL": "솔라나"
-    ]
-    
     func fetchTickerData() {
         if marketDicts.isEmpty {
             NetworkService.shared.fetchMarketList { [weak self] result in

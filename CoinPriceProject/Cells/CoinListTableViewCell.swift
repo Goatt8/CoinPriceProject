@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class CoinListTableViewCell: UITableViewCell {
     
@@ -15,7 +16,7 @@ class CoinListTableViewCell: UITableViewCell {
     private let symbolImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "person.circle.fill")
-        imageView.tintColor = .systemGray4
+        imageView.tintColor = .white
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.backgroundColor = .systemGray6
@@ -122,13 +123,22 @@ class CoinListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with coin: CoinModel) {
+    func bind(with coin: CoinModel) {
         nameLabel.text = coin.koreanName
         symbolLabel.text = coin.symbol
         currentPriceLabel.text = coin.price
         changeRateLabel.text = coin.changeRate
         changePriceLabel.text = coin.changedPrice
         tradePrice24h.text = coin.volume.formattedMillionNum
+        
+        symbolImageView.kf.setImage(
+                with: coin.logoURL,
+                placeholder: UIImage(systemName: "circle.fill"),
+                options: [
+                    .transition(.fade(0.3)),
+                    .cacheOriginalImage
+                ]
+            )
         
         switch coin.changeStatus {
         case "RISE": // 상승
@@ -163,7 +173,7 @@ class CoinListTableViewCell: UITableViewCell {
             symbolImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             
             titleVerticalStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            titleVerticalStackView.leadingAnchor.constraint(equalTo: symbolImageView.trailingAnchor, constant: 14),
+            titleVerticalStackView.leadingAnchor.constraint(equalTo: symbolImageView.trailingAnchor, constant: 16),
             
             priceVerticalStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             priceVerticalStackView.leadingAnchor.constraint(greaterThanOrEqualTo: titleVerticalStackView.leadingAnchor, constant: 16),
@@ -174,11 +184,8 @@ class CoinListTableViewCell: UITableViewCell {
             tradePrice24h.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             tradePrice24h.widthAnchor.constraint(equalToConstant: 80),
             
-            symbolImageView.widthAnchor.constraint(equalToConstant: 40),
-            symbolImageView.heightAnchor.constraint(equalToConstant: 40)
+            symbolImageView.widthAnchor.constraint(equalToConstant: 30),
+            symbolImageView.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
-    
-    
-    
 }

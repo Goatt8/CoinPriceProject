@@ -16,10 +16,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-        let rootVC = CoinListViewController()
-        let navigationController = UINavigationController(rootViewController: rootVC)
+        let rootVC = TabBarController()
         
-        window?.rootViewController = navigationController
+        window?.rootViewController = rootVC
         window?.makeKeyAndVisible()
     }
     
