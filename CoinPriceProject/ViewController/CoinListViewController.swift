@@ -54,12 +54,12 @@ class CoinListViewController: UIViewController {
     }
     
     private func setupSearchController() {
-        searchController.searchBar.placeholder = "코인명 또는 심볼 검색"
         searchController.hidesNavigationBarDuringPresentation = true
         searchController.obscuresBackgroundDuringPresentation = false
     }
     
     @objc private func seachButtonTapped() {
+        
         navigationItem.searchController = self.searchController
         DispatchQueue.main.async {
             self.searchController.isActive = true
