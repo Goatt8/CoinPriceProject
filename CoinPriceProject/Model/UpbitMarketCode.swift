@@ -1,8 +1,8 @@
 //
-//  UpbitMarketCode.swift
+//  UpbitModel.swift
 //  CoinPriceProject
 //
-//  Created by goat on 2/3/26.
+//  Created by goat on 2/4/26.
 //
 
 import Foundation

@@ -1,20 +1,18 @@
 //
-//  ViewController.swift
+//  FavoriteListViewController.swift
 //  CoinPriceProject
 //
-//  Created by goat on 1/30/26.
+//  Created by goat on 2/4/26.
 //
 
 import UIKit
 import Combine
 
-class CoinListViewController: UIViewController {
+class FavoriteListViewController: UIViewController {
     
-    private let coinViewModel = CoinViewModel()
+    var viewModel: FavoriteViewModel?
     
     private var cancellables = Set<AnyCancellable>()
-    
-    private let searchController = UISearchController(searchResultsController: nil)
     
     private var tableView : UITableView = {
         let tableView = UITableView()
@@ -29,8 +27,7 @@ class CoinListViewController: UIViewController {
         setNavigationController()
         configureUI()
         setTableView()
-        setupSearchController()
-        updateCoins()
+        bindViewModel()
     }
     
     private func setTableView() {
@@ -40,41 +37,17 @@ class CoinListViewController: UIViewController {
         self.tableView.delegate = self
     }
     
-    private func updateCoins() {
-        bindViewModel()
-        coinViewModel.fetchTickerData()
+    private func setNavigationController() {
+        navigationItem.title = "즐겨찾기"
     }
     
     private func bindViewModel() {
-        coinViewModel.$filteredCoins
+        viewModel?.$favoriteCoins
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
-    }
-    
-    private func setNavigationController() {
-        navigationItem.title = "코인 목록"
-        let rightButton = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: self, action: #selector(seachButtonTapped))
-        navigationItem.rightBarButtonItem = rightButton
-        
-        navigationItem.searchController = nil
-    }
-    
-    private func setupSearchController() {
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.obscuresBackgroundDuringPresentation = false
-        
-        searchController.searchResultsUpdater = self
-    }
-    
-    @objc private func seachButtonTapped() {
-        navigationItem.searchController = self.searchController
-        DispatchQueue.main.async {
-            self.searchController.isActive = true
-            self.searchController.searchBar.becomeFirstResponder()
-        }
     }
     
     private func configureUI() {
@@ -90,24 +63,22 @@ class CoinListViewController: UIViewController {
     }
 }
 
-extension CoinListViewController: UITableViewDataSource, UITableViewDelegate {
+extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return coinViewModel.filteredCoins.count
+        return viewModel?.favoriteCoins.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CoinListTableViewCell.identifier, for: indexPath) as! CoinListTableViewCell
-        let coin = coinViewModel.filteredCoins[indexPath.row]
+        
+        guard let vm = viewModel,
+              indexPath.row < vm.favoriteCoins.count
+        else { return cell }
+        
+        let coin = vm.favoriteCoins[indexPath.row]
+        
         cell.bind(with: coin)
         
         return cell
-    }
-}
-
-extension CoinListViewController: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let text = searchController.searchBar.text else { return }
-
-        coinViewModel.searchText = text
     }
 }

@@ -20,12 +20,15 @@ class TabBarController: UITabBarController {
     
     private func addVC() {
         let coinListVC = CoinListViewController()
+        coinListVC.viewModel = CoinViewModel()
+        
         let favListVC = FavoriteListViewController()
+        favListVC.viewModel = FavoriteViewModel()
     
         
         let viewControllersWithTabInfo: [(UIViewController, String, String, Int)] = [
             (coinListVC, "CoinList", "house", 0),
-            (favListVC, "Favorite", "person.3.fill", 1),
+            (favListVC, "Favorite", "list.bullet.rectangle.portrait", 1),
         ]
         
         let navControllers = viewControllersWithTabInfo.map { vc, title, imageName, tag -> UINavigationController in
