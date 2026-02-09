@@ -115,12 +115,27 @@ class CoinListTableViewCell: UITableViewCell {
     }()
     
     let favoriteButton: UIButton = {
-        let button = UIButton()
-        let config = UIImage.SymbolConfiguration(pointSize: 14, weight: .medium)
-        button.setImage(UIImage(systemName: "star", withConfiguration: config), for: .normal)
-        button.setImage(UIImage(systemName: "star.fill", withConfiguration: config), for: .selected)
-        button.tintColor = .systemYellow
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "star")
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 14, weight: .medium)
+        config.baseForegroundColor = .systemGray4
+        
+        let button = UIButton(configuration: config)
         button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.configurationUpdateHandler = { button in
+            guard var updatedConfig = button.configuration else { return }
+            
+            updatedConfig.image = button.isSelected
+            ? UIImage(systemName: "star.fill")
+            : UIImage(systemName: "star")
+            
+            updatedConfig.baseForegroundColor = button.isSelected
+            ? .systemYellow
+            : .systemGray4
+            
+            button.configuration = updatedConfig
+        }
         return button
     }()
     
@@ -137,6 +152,8 @@ class CoinListTableViewCell: UITableViewCell {
     
     @objc private func favoriteButtonTapped() {
         favoriteButton.isSelected.toggle()
+        
+        favoriteButton.tintColor = favoriteButton.isSelected ? .systemYellow : .systemGray4
     }
     
     func bind(with coin: CoinModel) {
@@ -148,13 +165,13 @@ class CoinListTableViewCell: UITableViewCell {
         tradePrice24h.text = coin.volume.formattedMillionNum
         
         symbolImageView.kf.setImage(
-                with: coin.logoURL,
-                placeholder: UIImage(systemName: "circle.fill"),
-                options: [
-                    .transition(.fade(0.3)),
-                    .cacheOriginalImage
-                ]
-            )
+            with: coin.logoURL,
+            placeholder: UIImage(systemName: "circle.fill"),
+            options: [
+                .transition(.fade(0.3)),
+                .cacheOriginalImage
+            ]
+        )
         
         switch coin.changeStatus {
         case "RISE": // 상승
