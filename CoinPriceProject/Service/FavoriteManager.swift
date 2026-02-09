@@ -9,11 +9,20 @@ import Foundation
 import Combine
 
 class FavoriteManager {
+    
     static let shared = FavoriteManager()
-    private init() {}
-
-    @Published private(set) var favoriteMarkets: Set<String> = []
-
+    private let favoritesKey = "favoriteMarkets"
+    
+    @Published var favoriteMarkets: Set<String> = [] {
+        didSet {
+            saveFavorites()
+        }
+    }
+    
+    private init() {
+        loadFavorites()
+    }
+    
     func toggleFavorite(market: String) {
         if favoriteMarkets.contains(market) {
             favoriteMarkets.remove(market)
@@ -24,5 +33,16 @@ class FavoriteManager {
     
     func isFavorite(market: String) -> Bool {
         return favoriteMarkets.contains(market)
+    }
+    
+    private func loadFavorites() {
+        if let savedArray = UserDefaults.standard.stringArray(forKey: favoritesKey) {
+            self.favoriteMarkets = Set(savedArray)
+        }
+    }
+    
+    private func saveFavorites() {
+        let array = Array(favoriteMarkets)
+        UserDefaults.standard.set(array, forKey: favoritesKey)
     }
 }

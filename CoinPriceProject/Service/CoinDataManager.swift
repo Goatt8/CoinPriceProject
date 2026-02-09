@@ -52,7 +52,6 @@ class CoinDataManager {
         }
     }
     
-    
     private func convert(from rawList: [UpbitRawData]) {
         
         print("convert: rawData 갯수 \(rawList.count)")

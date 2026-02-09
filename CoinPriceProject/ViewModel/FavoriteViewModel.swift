@@ -12,13 +12,13 @@ class FavoriteViewModel {
     
     @Published var favoriteCoins: [CoinModel] = []
     
+    private var marketDicts: [String: String] = [:]
+    
     private var cancellables = Set<AnyCancellable>()
     
     init() {
             setupFavoritePipeline()
         }
-    
-    private var marketDicts: [String: String] = [:]
     
     // MARK: - Combine - 전체 코인리스트 + favorite코인리스트
     private func setupFavoritePipeline() {
@@ -31,5 +31,4 @@ class FavoriteViewModel {
             }
             .assign(to: &$favoriteCoins)
         }
-    
 }

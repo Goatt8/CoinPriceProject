@@ -104,6 +104,7 @@ class CoinListTableViewCell: UITableViewCell {
         return label
     }()
     
+    // tradePrice
     let tradePrice24h: UILabel = {
         let label = UILabel()
         label.text = "24HtradePrice"
@@ -113,14 +114,29 @@ class CoinListTableViewCell: UITableViewCell {
         return label
     }()
     
+    let favoriteButton: UIButton = {
+        let button = UIButton()
+        let config = UIImage.SymbolConfiguration(pointSize: 14, weight: .medium)
+        button.setImage(UIImage(systemName: "star", withConfiguration: config), for: .normal)
+        button.setImage(UIImage(systemName: "star.fill", withConfiguration: config), for: .selected)
+        button.tintColor = .systemYellow
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         configureUI()
+        favoriteButton.addTarget(self, action: #selector(favoriteButtonTapped), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc private func favoriteButtonTapped() {
+        favoriteButton.isSelected.toggle()
     }
     
     func bind(with coin: CoinModel) {
@@ -158,6 +174,7 @@ class CoinListTableViewCell: UITableViewCell {
         self.contentView.addSubview(titleVerticalStackView)
         self.contentView.addSubview(priceVerticalStackView)
         self.contentView.addSubview(tradePrice24h)
+        self.contentView.addSubview(favoriteButton)
         
         self.titleVerticalStackView.addArrangedSubview(nameLabel)
         self.titleVerticalStackView.addArrangedSubview(symbolLabel)
@@ -181,11 +198,18 @@ class CoinListTableViewCell: UITableViewCell {
             
             tradePrice24h.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             tradePrice24h.leadingAnchor.constraint(greaterThanOrEqualTo: priceVerticalStackView.trailingAnchor, constant: 10),
-            tradePrice24h.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            tradePrice24h.trailingAnchor.constraint(equalTo: favoriteButton.leadingAnchor, constant: -10),
             tradePrice24h.widthAnchor.constraint(equalToConstant: 80),
             
+            favoriteButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            favoriteButton.leadingAnchor.constraint(equalTo: tradePrice24h.trailingAnchor, constant: 10),
+            favoriteButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            
             symbolImageView.widthAnchor.constraint(equalToConstant: 30),
-            symbolImageView.heightAnchor.constraint(equalToConstant: 30)
+            symbolImageView.heightAnchor.constraint(equalToConstant: 30),
+            
+            favoriteButton.widthAnchor.constraint(equalToConstant: 20),
+            favoriteButton.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
 }
