@@ -65,6 +65,7 @@ class FavoriteListViewController: UIViewController {
 
 extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("\(viewModel?.favoriteCoins.count)")
         return viewModel?.favoriteCoins.count ?? 0
     }
     
@@ -77,7 +78,13 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
         
         let coin = vm.favoriteCoins[indexPath.row]
         
-        cell.bind(with: coin)
+        let isFavorite = FavoriteManager.shared.isFavorite(market: coin.market)
+        
+        cell.bind(with: coin, isFavorite: isFavorite)
+        
+        cell.onFavoriteButtonTapped = { [weak self] in
+                FavoriteManager.shared.toggleFavorite(market: coin.market)
+            }
         
         return cell
     }

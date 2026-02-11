@@ -102,7 +102,14 @@ extension CoinListViewController: UITableViewDataSource, UITableViewDelegate {
         guard let vm = viewModel else { return cell }
 
         let coin = vm.filteredCoins[indexPath.row]
-        cell.bind(with: coin)
+        
+        let isFavorite = FavoriteManager.shared.isFavorite(market: coin.market)
+        cell.bind(with: coin, isFavorite: isFavorite)
+        
+        //cell clousre로 VC가 알게되었고, VC는 manager에게 알려줌
+        cell.onFavoriteButtonTapped = { [weak self] in
+                FavoriteManager.shared.toggleFavorite(market: coin.market)
+            }
         
         return cell
     }

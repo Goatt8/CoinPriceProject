@@ -35,12 +35,14 @@ class FavoriteManager {
         return favoriteMarkets.contains(market)
     }
     
+    //userDefaults에서 불러오기
     private func loadFavorites() {
         if let savedArray = UserDefaults.standard.stringArray(forKey: favoritesKey) {
             self.favoriteMarkets = Set(savedArray)
         }
     }
     
+    //userDefaults에 저장
     private func saveFavorites() {
         let array = Array(favoriteMarkets)
         UserDefaults.standard.set(array, forKey: favoritesKey)

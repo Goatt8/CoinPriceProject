@@ -12,6 +12,8 @@ class CoinListTableViewCell: UITableViewCell {
     
     static let identifier = "CoinListTableViewCell"
     
+    var onFavoriteButtonTapped: (() -> Void)?
+    
     //Image
     private let symbolImageView: UIImageView = {
         let imageView = UIImageView()
@@ -152,17 +154,18 @@ class CoinListTableViewCell: UITableViewCell {
     
     @objc private func favoriteButtonTapped() {
         favoriteButton.isSelected.toggle()
-        
-        favoriteButton.tintColor = favoriteButton.isSelected ? .systemYellow : .systemGray4
+        onFavoriteButtonTapped?()
     }
     
-    func bind(with coin: CoinModel) {
+    func bind(with coin: CoinModel, isFavorite: Bool) {
         nameLabel.text = coin.koreanName
         symbolLabel.text = coin.symbol
         currentPriceLabel.text = coin.price
         changeRateLabel.text = coin.changeRate
         changePriceLabel.text = coin.changedPrice
         tradePrice24h.text = coin.volume.formattedMillionNum
+        
+        favoriteButton.isSelected = isFavorite
         
         symbolImageView.kf.setImage(
             with: coin.logoURL,
