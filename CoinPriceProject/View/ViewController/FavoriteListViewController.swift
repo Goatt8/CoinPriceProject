@@ -80,7 +80,7 @@ extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate
         
         let isFavorite = FavoriteManager.shared.isFavorite(market: coin.market)
         
-        cell.bind(with: coin, isFavorite: isFavorite)
+        cell.bind(with: coin, isFavorite: isFavorite, showFavorite: false)
         
         cell.onFavoriteButtonTapped = { [weak self] in
                 FavoriteManager.shared.toggleFavorite(market: coin.market)

@@ -12,6 +12,8 @@ class CoinListTableViewCell: UITableViewCell {
     
     static let identifier = "CoinListTableViewCell"
     
+    private var favoriteButtonWidthConstraint: NSLayoutConstraint?
+    
     var onFavoriteButtonTapped: (() -> Void)?
     
     //Image
@@ -157,7 +159,7 @@ class CoinListTableViewCell: UITableViewCell {
         onFavoriteButtonTapped?()
     }
     
-    func bind(with coin: CoinModel, isFavorite: Bool) {
+    func bind(with coin: CoinModel, isFavorite: Bool, showFavorite: Bool = true) {
         nameLabel.text = coin.koreanName
         symbolLabel.text = coin.symbol
         currentPriceLabel.text = coin.price
@@ -187,6 +189,9 @@ class CoinListTableViewCell: UITableViewCell {
             changePriceLabel.textColor = .label
             changeRateLabel.textColor = .label
         }
+
+        favoriteButton.isHidden = !showFavorite
+        favoriteButtonWidthConstraint?.constant = showFavorite ? 20 : 0
     }
     
     private func configureUI() {
@@ -203,6 +208,8 @@ class CoinListTableViewCell: UITableViewCell {
         self.priceVerticalStackView.addArrangedSubview(horizontalStackView)
         self.horizontalStackView.addArrangedSubview(changeRateLabel)
         self.horizontalStackView.addArrangedSubview(changePriceLabel)
+        
+        favoriteButtonWidthConstraint = favoriteButton.widthAnchor.constraint(equalToConstant: 20)
         
         NSLayoutConstraint.activate([
             
@@ -228,8 +235,8 @@ class CoinListTableViewCell: UITableViewCell {
             symbolImageView.widthAnchor.constraint(equalToConstant: 30),
             symbolImageView.heightAnchor.constraint(equalToConstant: 30),
             
-            favoriteButton.widthAnchor.constraint(equalToConstant: 20),
-            favoriteButton.heightAnchor.constraint(equalToConstant: 20)
+            favoriteButton.heightAnchor.constraint(equalToConstant: 20),
+            favoriteButtonWidthConstraint!
         ])
     }
 }
