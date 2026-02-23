@@ -47,8 +47,8 @@ class CoinListViewController: UIViewController {
     
     private func bindViewModel() {
         viewModel?.$filteredCoins
-            .receive(on: RunLoop.main)
-            .sink { [weak self] _ in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] coins in
                 self?.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -100,7 +100,7 @@ extension CoinListViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CoinListTableViewCell.identifier, for: indexPath) as? CoinListTableViewCell else { return UITableViewCell() }
         
         guard let vm = viewModel else { return cell }
-
+        
         let coin = vm.filteredCoins[indexPath.row]
         
         let isFavorite = FavoriteManager.shared.isFavorite(market: coin.market)
@@ -108,8 +108,8 @@ extension CoinListViewController: UITableViewDataSource, UITableViewDelegate {
         
         //cell clousre로 VC가 알게되었고, VC는 manager에게 알려줌
         cell.onFavoriteButtonTapped = { [weak self] in
-                FavoriteManager.shared.toggleFavorite(market: coin.market)
-            }
+            FavoriteManager.shared.toggleFavorite(market: coin.market)
+        }
         
         return cell
     }

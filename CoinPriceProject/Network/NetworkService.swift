@@ -35,7 +35,4 @@ class NetworkService {
                 completion(response.result)
             }
     }
-    
-    
-    
 }

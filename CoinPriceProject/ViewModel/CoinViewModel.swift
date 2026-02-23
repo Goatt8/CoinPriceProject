@@ -22,13 +22,22 @@ class CoinViewModel {
         setupSearchPipeline()
     }
     
+    // CoinViewModel.swift
     private func setupSearchPipeline() {
-        Publishers.CombineLatest(CoinDataManager.shared.$allCoins, $searchText)
-            .map { (allCoins, text) in
-                if text.isEmpty { return allCoins }
-                return allCoins.filter { $0.koreanName.contains(text) || $0.symbol.contains(text.uppercased()) }
+        // CombineLatest 대신 직접 구독해서 filteredCoins에 꽂아버리기
+        CoinDataManager.shared.$allCoins
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] allCoins in
+                let text = self?.searchText ?? ""
+                if text.isEmpty {
+                    self?.filteredCoins = allCoins
+                } else {
+                    self?.filteredCoins = allCoins.filter {
+                        $0.koreanName.contains(text) || $0.symbol.contains(text.uppercased())
+                    }
+                }
             }
-            .assign(to: &$filteredCoins)
+            .store(in: &cancellables)
     }
     
     func updateTicker() {

@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct CoinModel {
+struct CoinModel: Equatable {
     let market: String      // KRW-BTC
     let koreanName: String  // 비트코인
     let symbol: String      // BTC
-    let price: String
-    let changeRate: String
-    let changeStatus: String
-    let changedPrice: String
-    let volume: Double
+    var price: String
+    var changeRate: String
+    var changeStatus: String
+    var changedPrice: String
+    var volume: Double
     let logoURL: URL?
 }

@@ -14,6 +14,10 @@ class CoinDataManager {
     
     @Published var allCoins: [CoinModel] = []
     
+    var currentMarketCodes: [String] {
+        return allCoins.map { $0.market }
+    }
+    
     private var marketDicts: [String: String] = [:]
     
     func fetchTickerData() {
@@ -69,11 +73,52 @@ class CoinDataManager {
                 logoURL: URL(string: "https://static.upbit.com/logos/\(symbol).png")
             )
         }
-        
         converted.sort { $0.volume > $1.volume }
-        
+    
         DispatchQueue.main.async {
             self.allCoins = converted
+            
+            SocketManager.shared.connect()
         }
     }
+    
+    func updateRealTimePrice(with socketData: SocketTickerModel) {
+        guard let marketCode = socketData.code,
+              let rawPrice = socketData.tradePrice, rawPrice > 0 else { return }
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            // 현재 배열(allCoins)에서 해당 코인의 위치(index)를 찾음
+            if let index = self.allCoins.firstIndex(where: { $0.market == marketCode }) {
+                
+                var updatedCoin = self.allCoins[index]
+                
+                updatedCoin.price = rawPrice.toCurrencyString()
+            
+                if let change = socketData.change {
+                    updatedCoin.changeStatus = change
+                }
+                
+                if let rate = socketData.signedChangeRate {
+                    updatedCoin.changeRate = rate.toPercentageString()
+                }
+                
+                if let changePrice = socketData.signedChangePrice {
+                    updatedCoin.changedPrice = changePrice.toCurrencyString()
+                }
+            
+                let tradeAmount = socketData.accTradePrice24h
+                    updatedCoin.volume = tradeAmount
+                
+                self.allCoins[index] = updatedCoin
+                
+                //test
+                if marketCode == "KRW-BTC" {
+                    print("✅ 비트코인 price: \(updatedCoin.price)")
+                }
+            }
+        }
+    }
+    
 }
