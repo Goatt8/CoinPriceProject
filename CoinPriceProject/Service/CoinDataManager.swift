@@ -13,11 +13,7 @@ class CoinDataManager {
     private init() {}
     
     @Published var allCoins: [CoinModel] = []
-    
-    var currentMarketCodes: [String] {
-        return allCoins.map { $0.market }
-    }
-    
+
     private var marketDicts: [String: String] = [:]
     
     func fetchTickerData() {
