@@ -1,8 +1,10 @@
 # CoinPriceProject
 
+<br>
+
 > Upbit API를 활용한 실시간 코인 시세 모니터링 앱
 
-MVVM + Combine 패턴을 통한 반응형 UI 구현에 초점을 맞춘 코인 시세확인 프로젝트입니다. 
+MVVM + Combine 패턴을 통한 반응형 UI 구현에 초점을 맞춘 실시간 코인 시세확인 프로젝트입니다. 
 
 <br>
 
@@ -41,7 +43,7 @@ MVVM + Combine 패턴을 통한 반응형 UI 구현에 초점을 맞춘 코인 �
 
 ## File Tree -프로젝트 구조
 
-```typescript
+```text
 
 CoinPriceProject
 ├── Models          # SocketTickerModel, CoinModel, UpbitMarketCode
@@ -85,19 +87,23 @@ CoinPriceProject
 ####  WebSocket 리소스 최적화 (Critical Hit)
 * 과부하 문제: 업비트의 200여 개 코인을 동시에 구독할 경우, 초당 수백 건의 데이터가 유입되어 UI 스레드 과부하 및 앱 강제 종료(Killed) 현상 발생.
 
-* ✅해결: prefix(20) 메서드를 활용하여 상위 거래량 코인 20개에 대해서만 실시간 구독을 활성화. 과부하를 최적화하고 안정성 확보
+* ✅해결: prefix(20) 메서드를 활용하여, 사용자경험UX를 해치지않는 선에서 상위 거래량 코인 20개에 대해서만 실시간 구독을 활성화. 과부하를 최적화하고 안정성 확보
 
 
 * 비동기 이미지처리: Kingfisher를 활용해 수백 개의 코인 로고 이미지를 캐싱 처리하여 스크롤 성능을 개선함
 
 
-<br>
+#### cell favoriteButton 셀 재사용 버그
 
-----
-
-<br>
+* ✅해결: 셀 재사용시 재사용셀을 리셋해주지않아 중복클릭되는 오류가 있어 prepareForReuse()코드를 cell 안에 넣어줌으로써 해결.
 
 
+#### CoinDataManager로 데이터 흐름정리 - 단일 신뢰 원칙
+
+
+* CoinManager(시세), FavoriteManager(즐겨찾기) 등 여러 객체가 파편화되어 있어, 특정 데이터 변경 시 모든 화면의 상태를 동일하게 유지하기 어렵고 디버깅 시 데이터 추적이 복잡해지는 문제 발생.
+
+* ✅해결: CoinDataManager를 설정하여 모든 코인 데이터(시세+즐겨찾기 상태)를 통합 관리.   CoinDataManager가 다른 Manager에게 데이터를 뿌려주고 필요한상태로 가공해서 각 ViewModel에 쓰이도록 단방향식 구현. 유지보수 효율성 향상
 
 
 
