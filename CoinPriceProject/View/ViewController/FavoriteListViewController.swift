@@ -65,7 +65,6 @@ class FavoriteListViewController: UIViewController {
 
 extension FavoriteListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("\(viewModel?.favoriteCoins.count)")
         return viewModel?.favoriteCoins.count ?? 0
     }
     

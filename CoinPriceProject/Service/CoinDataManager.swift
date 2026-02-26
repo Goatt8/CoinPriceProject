@@ -108,11 +108,6 @@ class CoinDataManager {
                     updatedCoin.volume = tradeAmount
                 
                 self.allCoins[index] = updatedCoin
-                
-                //test
-                if marketCode == "KRW-BTC" {
-                    print("✅ 비트코인 price: \(updatedCoin.price)")
-                }
             }
         }
     }

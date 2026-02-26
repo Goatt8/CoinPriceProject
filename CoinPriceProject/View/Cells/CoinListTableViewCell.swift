@@ -121,7 +121,7 @@ class CoinListTableViewCell: UITableViewCell {
     let favoriteButton: UIButton = {
         var config = UIButton.Configuration.plain()
         config.image = UIImage(systemName: "star")
-        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 14, weight: .medium)
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium)
         config.baseForegroundColor = .systemGray4
         
         let button = UIButton(configuration: config)
@@ -152,6 +152,12 @@ class CoinListTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        favoriteButton.isSelected = false
+        onFavoriteButtonTapped = nil
     }
     
     @objc private func favoriteButtonTapped() {
@@ -235,7 +241,7 @@ class CoinListTableViewCell: UITableViewCell {
             symbolImageView.widthAnchor.constraint(equalToConstant: 30),
             symbolImageView.heightAnchor.constraint(equalToConstant: 30),
             
-            favoriteButton.heightAnchor.constraint(equalToConstant: 20),
+            favoriteButton.heightAnchor.constraint(equalToConstant: 24),
             favoriteButtonWidthConstraint!
         ])
     }
