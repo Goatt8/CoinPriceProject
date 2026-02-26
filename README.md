@@ -8,6 +8,8 @@ MVVM + Combine 패턴을 통한 반응형 UI 구현에 초점을 맞춘 코인 �
 
 ----
 
+<br>
+
 ## 📺 Preview
 
 | 실시간 시세 (WebSocket) | 즐겨찾기 (UserDefaults) | 검색 및 필터링 |
@@ -16,12 +18,10 @@ MVVM + Combine 패턴을 통한 반응형 UI 구현에 초점을 맞춘 코인 �
 
 
 
-
-
-
 <br>
 
 ---
+
 <br>
 
 ## 🛠 Tech Stack
@@ -32,6 +32,26 @@ MVVM + Combine 패턴을 통한 반응형 UI 구현에 초점을 맞춘 코인 �
 * Network: URLSession (REST API & WebSocket)
 * Local Storage: UserDefaults
 * Dependency: Kingfisher
+
+<br>
+
+----
+
+<br>
+
+## File Tree -프로젝트 구조
+
+```typescript
+
+CoinPriceProject
+├── Models          # SocketTickerModel, CoinModel, UpbitMarketCode
+├── Network         # NetworkService, UpbitRawData(DTO)
+├── Service         # CoinDataManager, FavoriteManager, SocketManager
+├── ViewModels      # CoinViewModel, FavoriteViewModel
+├── Views           # CoinListVC, FavoriteListVC, TabbarControllerVC, Cells(CoinlistTableViewCell)
+└── Resources       # Assets, LaunchScreen, Info.plist, AppDelegate, SceneDelegate
+'''
+```
 
 <br>
 
@@ -78,30 +98,6 @@ MVVM + Combine 패턴을 통한 반응형 UI 구현에 초점을 맞춘 코인 �
 <br>
 
 
-## 목차
-1. [타임라인](#타임라인)
-2. [프로젝트 구조](#프로젝트-구조)
-3. [실행 화면](#실행-화면)
-4. [트러블 슈팅](#트러블-슈팅) 
-5. [핵심경험](#핵심경험)
-6. [참고 링크](#참고-링크)
 
 
-
-
-
-
-## File Tree -프로젝트 구조
-
-```typescript
-
-CoinPriceProject
-├── Models          # SocketTickerModel, CoinModel, UpbitMarketCode
-├── Network         # NetworkService, UpbitRawData(DTO)
-├── Service         # CoinDataManager, FavoriteManager, SocketManager
-├── ViewModels      # CoinViewModel, FavoriteViewModel
-├── Views           # CoinListVC, FavoriteListVC, TabbarControllerVC, Cells(CoinlistTableViewCell)
-└── Resources       # Assets, LaunchScreen, Info.plist, AppDelegate, SceneDelegate
-'''
-```
 
